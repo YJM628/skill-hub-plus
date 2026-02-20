@@ -22,11 +22,6 @@ struct ChatRequest {
     system_context: Option<String>,
 }
 
-#[derive(Debug, Deserialize)]
-struct GetMessagesRequest {
-    session_id: String,
-}
-
 #[derive(Debug, Serialize)]
 struct GetMessagesResponse {
     messages: Vec<ChatMessage>,
@@ -490,7 +485,7 @@ fn stream_anthropic_response(
 // ── Handle GET /api/chat/messages request ──
 
 fn handle_get_messages_request(
-    mut request: tiny_http::Request,
+    request: tiny_http::Request,
     session_store: Arc<SessionStore>,
 ) {
     // Parse query parameters
