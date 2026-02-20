@@ -166,6 +166,7 @@ pub fn run() {
             commands::update_ai_agent,
             commands::remove_ai_agent,
             commands::list_ai_agents,
+            commands::scan_for_new_skills,
         ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");

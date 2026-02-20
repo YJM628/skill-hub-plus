@@ -4,6 +4,7 @@ import { toast } from 'sonner'
 import type {
   CategoryInfoDto,
   DiscoveredSkillDto,
+  InstallResultDto,
   ManagedSkill,
   OnboardingPlan,
   ToolOption,
@@ -275,7 +276,7 @@ export const useSkillManagement = (config: {
   }, [toolStatus, toolLabelById])
   
   const isInstalled = useCallback(
-    (toolId: string) => installedTools.some((tool) => tool.id === toolId),
+    (toolId: string) => installedTools.some((tool) => tool === toolId),
     [installedTools],
   )
   
@@ -440,6 +441,80 @@ export const useSkillManagement = (config: {
     },
     [invokeTauri, loadManagedSkills, t],
   )
+
+  const handleRefreshScan = useCallback(async () => {
+    setLoading(true)
+    setLoadingStartAt(Date.now())
+    setError(null)
+    try {
+      setActionMessage(t('actions.scanning'))
+      const installedSkillIds = managedSkills.map(s => s.id)
+      const newSkills = await invokeTauri<LocalDiscoveredSkillDto[]>('scan_for_new_skills', { 
+        installedSkillIds 
+      })
+      
+      if (newSkills.length > 0) {
+        const importedNames: string[] = []
+        const failedNames: string[] = []
+
+        for (const skill of newSkills) {
+          try {
+            setActionMessage(t('actions.importing', { name: skill.name }))
+            const result = await invokeTauri<InstallResultDto>('import_existing_skill', {
+              sourcePath: skill.path,
+              name: skill.name,
+            })
+            // Auto-sync to the source tool (e.g. claude_code for ~/.claude/skills)
+            if (skill.tool) {
+              try {
+                await invokeTauri('sync_skill_to_tool', {
+                  sourcePath: result.central_path,
+                  skillId: result.skill_id,
+                  tool: skill.tool,
+                  name: result.name,
+                })
+              } catch {
+                // Sync failure is non-fatal; skill is still imported
+              }
+            }
+            importedNames.push(skill.name)
+          } catch {
+            failedNames.push(skill.name)
+          }
+        }
+
+        if (importedNames.length > 0) {
+          toast.success(
+            t('status.newSkillsImported', { count: importedNames.length }),
+            {
+              description: importedNames.join(', '),
+              duration: 5000,
+            },
+          )
+        }
+        if (failedNames.length > 0) {
+          toast.warning(
+            t('status.someSkillsImportFailed', { count: failedNames.length }),
+            {
+              description: failedNames.join(', '),
+              duration: 5000,
+            },
+          )
+        }
+      } else {
+        toast.info(t('status.noNewSkills'))
+      }
+      
+      setActionMessage(null)
+      await loadManagedSkills()
+    } catch (err) {
+      const raw = err instanceof Error ? err.message : String(err)
+      setError(raw)
+    } finally {
+      setLoading(false)
+      setLoadingStartAt(null)
+    }
+  }, [invokeTauri, loadManagedSkills, managedSkills, t])
   
   const handleDeleteManaged = useCallback(
     async (skill: ManagedSkill) => {
@@ -500,6 +575,7 @@ export const useSkillManagement = (config: {
             } catch (err) {
               const raw = err instanceof Error ? err.message : String(err)
               if (raw.startsWith('TOOL_NOT_INSTALLED|')) continue
+              if (raw.startsWith('TARGET_EXISTS|')) continue  // 忽略已存在的目标路径
               collectedErrors.push({
                 title: t('errors.syncFailedTitle', {
                   name: skill.name,
@@ -740,5 +816,6 @@ export const useSkillManagement = (config: {
     handleSharedCancel,
     handleSharedConfirm,
     handleInstallQuickSkill,
+    handleRefreshScan,
   }
 }

@@ -88,9 +88,15 @@ export interface DiscoveredSkillDto {
   description: string;
   tags: string[];
   author: string;
-  repository_url: string;
   github_url: string;
   category: string;
+}
+
+export interface LocalDiscoveredSkillDto {
+  name: string;
+  path: string;
+  tool: string;
+  is_link: boolean;
 }
 
 export interface PaginatedSkillsDto {

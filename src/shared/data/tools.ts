@@ -1,6 +1,8 @@
 import type { ToolOption } from '../types'
 
 export const tools: ToolOption[] = [
+  { id: 'agents', label: 'Agents (Priority)', installed: false },
+  { id: 'aone_copilot', label: 'Aone Copilot', installed: false },
   { id: 'opencode', label: 'OpenCode', installed: false },
   { id: 'claude_code', label: 'Claude Code', installed: false },
   { id: 'codex', label: 'Codex', installed: false },

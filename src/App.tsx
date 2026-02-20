@@ -264,11 +264,19 @@ function AppContent() {
           onSortChange={skillManagement.setSortBy}
           onSearchChange={skillManagement.setSearchQuery}
           onCategoryFilterChange={skillManagement.setCategoryFilter}
-          onRefresh={skillManagement.loadManagedSkills}
-          onUpdateAll={() => toolManagement.handleSyncAllManagedToTools(skillManagement.installedTools.map(t => t.id))}
+          onRefresh={skillManagement.handleRefreshScan}
+          onUpdateAll={async () => {
+            // Update all skills from their sources (similar to SkillCard's update logic)
+            for (const skill of skillManagement.managedSkills) {
+              await skillManagement.handleUpdateManaged(skill)
+            }
+          }}
           onReviewImport={() => {}}
           onUpdateSkill={skillManagement.handleUpdateManaged}
-          onDeleteSkill={skillManagement.setPendingDeleteId}
+          onDeleteSkill={(skillId) => {
+            skillManagement.setPendingDeleteId(skillId)
+            setShowDeleteModal(true)
+          }}
           onToggleTool={skillManagement.handleToggleToolForSkill}
           onSkillCategoryChange={skillManagement.handleUpdateSkillCategory}
           t={t}

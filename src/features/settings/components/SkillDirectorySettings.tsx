@@ -1,4 +1,4 @@
-import { memo, useCallback, useState } from 'react'
+import { memo, useCallback, useEffect, useState } from 'react'
 import { invoke } from '@tauri-apps/api/core'
 import type { TFunction } from 'i18next'
 import type { CategoryInfoDto } from '../../../shared/types'
@@ -36,6 +36,26 @@ const SkillDirectorySettings = ({ isTauri, t }: SkillDirectorySettingsProps) => 
       setCategories([])
     }
   }, [isTauri])
+
+  const handleToggleScanPaths = useCallback(() => {
+    setIsScanPathsExpanded((prev) => {
+      const nextValue = !prev
+      if (nextValue) {
+        void loadScanPaths()
+      }
+      return nextValue
+    })
+  }, [loadScanPaths])
+
+  const handleToggleCategories = useCallback(() => {
+    setIsCategoriesExpanded((prev) => {
+      const nextValue = !prev
+      if (nextValue) {
+        void loadCategories()
+      }
+      return nextValue
+    })
+  }, [loadCategories])
 
   const handleAddScanPath = useCallback(async () => {
     if (!isTauri) return
@@ -111,7 +131,7 @@ const SkillDirectorySettings = ({ isTauri, t }: SkillDirectorySettingsProps) => 
         <button
           className="settings-collapsible-header"
           type="button"
-          onClick={() => setIsScanPathsExpanded(!isScanPathsExpanded)}
+          onClick={handleToggleScanPaths}
           aria-expanded={isScanPathsExpanded}
         >
           <span className="settings-collapsible-title">
@@ -194,7 +214,7 @@ const SkillDirectorySettings = ({ isTauri, t }: SkillDirectorySettingsProps) => 
         <button
           className="settings-collapsible-header"
           type="button"
-          onClick={() => setIsCategoriesExpanded(!isCategoriesExpanded)}
+          onClick={handleToggleCategories}
           aria-expanded={isCategoriesExpanded}
         >
           <span className="settings-collapsible-title">

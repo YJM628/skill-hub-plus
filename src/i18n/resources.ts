@@ -289,6 +289,8 @@ export const resources = {
         removing: 'Removing {{name}} ...',
         updating: 'Updating {{name}} ...',
         unsyncing: 'Unsync {{name}} -> {{tool}} ...',
+        scanning: 'Scanning for new skills...',
+        importing: 'Importing {{name}} ...',
       },
       status: {
         importCompleted: 'Import completed.',
@@ -302,6 +304,11 @@ export const resources = {
         updated: '{{name}} updated.',
         updateAllCompleted: 'All skills updated.',
         gitCacheCleared: 'Git cache cleared ({{count}} removed).',
+        newSkillsFound: 'Found {{count}} new skills.',
+        noNewSkills: 'No new skills found.',
+        newSkillsImported: 'Imported {{count}} new skills.',
+        someSkillsImportFailed: '{{count}} skills failed to import.',
+        skillInstalled: '{{name}} installed.',
       },
       relative: {
         empty: '—',
@@ -652,6 +659,8 @@ export const resources = {
         removing: '移除 {{name}} ...',
         updating: '更新 {{name}} ...',
         unsyncing: '取消生效：{{name}} -> {{tool}} ...',
+        scanning: '正在扫描新技能...',
+        importing: '正在导入 {{name}} ...',
       },
       status: {
         importCompleted: '导入完成。',
@@ -665,6 +674,11 @@ export const resources = {
         updated: '{{name}} 已更新。',
         updateAllCompleted: '全部技能已更新。',
         gitCacheCleared: 'Git 缓存已清理（删除 {{count}} 项）。',
+        newSkillsFound: '发现 {{count}} 个新技能。',
+        noNewSkills: '未发现新技能。',
+        newSkillsImported: '已导入 {{count}} 个新技能。',
+        someSkillsImportFailed: '{{count}} 个技能导入失败。',
+        skillInstalled: '{{name}} 已安装。',
       },
       relative: {
         empty: '—',
