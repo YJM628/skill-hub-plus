@@ -1,0 +1,11 @@
+{
+  "mcpServers": {
+    "skills-hub-analytics": {
+      "command": "node",
+      "args": ["/absolute/path/to/skills-hub/mcp-analytics-server/dist/index.js"],
+      "env": {
+        "ANALYTICS_ENDPOINT": "http://127.0.0.1:19823"
+      }
+    }
+  }
+}

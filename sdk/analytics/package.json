@@ -1,0 +1,27 @@
+{
+  "name": "@skillshub/analytics",
+  "version": "0.1.0",
+  "description": "Skills Hub Analytics SDK - Track skill invocations, costs, and user feedback",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "build": "tsc",
+    "test": "vitest",
+    "prepublishOnly": "npm run build"
+  },
+  "keywords": [
+    "analytics",
+    "skills-hub",
+    "telemetry"
+  ],
+  "author": "Skills Hub Team",
+  "license": "MIT",
+  "devDependencies": {
+    "typescript": "^5.0.0",
+    "@types/node": "^20.0.0",
+    "vitest": "^1.0.0"
+  },
+  "files": [
+    "dist"
+  ]
+}
